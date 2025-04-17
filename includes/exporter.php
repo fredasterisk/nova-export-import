@@ -3,9 +3,12 @@ if (!defined('ABSPATH')) exit;
 function nei_cpt_exporter_handle_export() {
     $cpt = sanitize_text_field($_POST['cpt']);
     $fields = $_POST['acf_fields'] ?? [];
-
+    $taxonomy_data = nei_export_taxonomies_and_terms($cpt);
     $posts = get_posts(['post_type' => $cpt, 'numberposts' => -1]);
-    $output = [];
+    $output = [
+        'posts' => [],
+        'defined_taxonomies' => $taxonomy_data,
+    ];
 
     foreach ($posts as $post) {
         $entry = [
@@ -31,12 +34,12 @@ foreach ($taxonomies as $taxonomy) {
 }
 
 
-        $output[] = $entry;
+        $output['posts'] = $entry;
     }
 
     $filename = 'nova_export_' . $cpt . '_' . date('Ymd_His') . '.json';
     header('Content-disposition: attachment; filename=' . $filename);
     header('Content-type: application/json');
-    echo json_encode($output, JSON_PRETTY_PRINT);
+    echo json_encode($output, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
     exit;
 }

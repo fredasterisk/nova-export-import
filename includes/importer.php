@@ -10,13 +10,15 @@ function nei_handle_import_upload() {
     $file = $_FILES['import_file']['tmp_name'];
     $content = file_get_contents($file);
     $data = json_decode($content, true);
-
+    if (isset($item['defined_taxonomies'])) {
+        nei_import_taxonomies_and_terms($item['defined_taxonomies']);
+    }
     if (!is_array($data)) {
         echo '<div class="notice notice-error"><p>Fichier JSON invalide.</p></div>';
         return;
     }
 
-    foreach ($data as $item) {
+    foreach ($data['posts'] as $item) {
         $post_id = wp_insert_post([
             'post_title'   => $item['title'],
             'post_content' => $item['content'],

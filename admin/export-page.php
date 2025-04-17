@@ -55,7 +55,7 @@ function nei_cpt_exporter_render_page() {
                     echo '<form method="post">';
                     echo '<input type="hidden" name="cpt" value="' . esc_attr($cpt) . '">';
                     foreach ($fields as $key => $field) {
-                        echo '<label><input type="checkbox" name="acf_fields[]" value="' . esc_attr($key) . '">' . esc_html($field['label']) . '</label><br>';
+                        echo '<label><input type="checkbox" checked name="acf_fields[]" value="' . esc_attr($key) . '">' . esc_html($field['label']) . '</label><br>';
                     }
                     echo '<br><input type="submit" name="nei_export_cpt" class="button button-primary" value="Exporter">';
                     echo '</form>';

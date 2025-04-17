@@ -36,7 +36,7 @@ foreach ($taxonomies as $taxonomy) {
 
         $output['posts'] = $entry;
     }
-
+    ob_clean();
     $filename = 'nova_export_' . $cpt . '_' . date('Ymd_His') . '.json';
     header('Content-disposition: attachment; filename=' . $filename);
     header('Content-type: application/json');

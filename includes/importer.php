@@ -30,6 +30,11 @@ function nei_handle_import_upload() {
                 update_field($key, $value, $post_id);
             }
         }
+
+            // Import de l'image à la une (AJOUT)
+    if (!empty($item['featured_image'])) {
+        nei_import_featured_image($item['featured_image'], $post_id);
+    }
     }
 
     echo '<div class="notice notice-success"><p>Importation terminée avec succès.</p></div>';

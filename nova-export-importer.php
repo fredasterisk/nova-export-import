@@ -10,5 +10,7 @@ if (!defined('ABSPATH')) exit;
 require_once plugin_dir_path(__FILE__) . 'includes/exporter.php';
 require_once plugin_dir_path(__FILE__) . 'admin/export-page.php';
 
+require_once plugin_dir_path(__FILE__) . 'includes/media.php';
+
 require_once plugin_dir_path(__FILE__) . 'admin/import-page.php';
 require_once plugin_dir_path(__FILE__) . 'includes/importer.php';

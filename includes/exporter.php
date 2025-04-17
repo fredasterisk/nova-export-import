@@ -13,6 +13,7 @@ function nei_cpt_exporter_handle_export() {
             'content' => $post->post_content,
             'slug' => $post->post_name,
             'meta' => [],
+            'featured_image' => get_the_post_thumbnail_url($post->ID, 'full'), // ← AJOUT ICI
         ];
 
         foreach ($fields as $field_key) {

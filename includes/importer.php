@@ -26,15 +26,34 @@ function nei_handle_import_upload() {
         ]);
 
         if ($post_id && !is_wp_error($post_id)) {
+            // Import ACF
+            foreach ($item['meta'] as $key => $value) {
+                update_field($key, $value, $post_id);
+            }
+        
+            // Import des taxonomies
+            if (!empty($item['taxonomies'])) {
+                foreach ($item['taxonomies'] as $taxonomy => $terms) {
+                    wp_set_post_terms($post_id, $terms, $taxonomy);
+                }
+            }
+        
+            // Import image à la une
+            if (!empty($item['featured_image'])) {
+                nei_import_featured_image($item['featured_image'], $post_id);
+            }
+        }        
+
+        if ($post_id && !is_wp_error($post_id)) {
             foreach ($item['meta'] as $key => $value) {
                 update_field($key, $value, $post_id);
             }
         }
 
-            // Import de l'image à la une (AJOUT)
-    if (!empty($item['featured_image'])) {
-        nei_import_featured_image($item['featured_image'], $post_id);
-    }
+        // Import de l'image à la une (AJOUT)
+        if (!empty($item['featured_image'])) {
+            nei_import_featured_image($item['featured_image'], $post_id);
+        }
     }
 
     echo '<div class="notice notice-success"><p>Importation terminée avec succès.</p></div>';

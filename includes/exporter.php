@@ -12,6 +12,7 @@ function nei_cpt_exporter_handle_export() {
             'title' => $post->post_title,
             'content' => $post->post_content,
             'slug' => $post->post_name,
+            'taxonomies' => [],
             'meta' => [],
             'featured_image' => get_the_post_thumbnail_url($post->ID, 'full'), // ← AJOUT ICI
         ];
@@ -19,6 +20,16 @@ function nei_cpt_exporter_handle_export() {
         foreach ($fields as $field_key) {
             $entry['meta'][$field_key] = get_field($field_key, $post->ID);
         }
+
+        $taxonomies = get_object_taxonomies($post->post_type);
+
+foreach ($taxonomies as $taxonomy) {
+    $terms = wp_get_post_terms($post->ID, $taxonomy, ['fields' => 'names']);
+    if (!is_wp_error($terms)) {
+        $entry['taxonomies'][$taxonomy] = $terms;
+    }
+}
+
 
         $output[] = $entry;
     }

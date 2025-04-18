@@ -1,5 +1,7 @@
 <?php
+
 if (!defined('ABSPATH')) exit;
+
 function nei_cpt_exporter_handle_export() {
     $cpt = sanitize_text_field($_POST['cpt']);
     $fields = $_POST['acf_fields'] ?? [];
@@ -17,7 +19,7 @@ function nei_cpt_exporter_handle_export() {
             'slug' => $post->post_name,
             'taxonomies' => [],
             'meta' => [],
-            //'featured_image' => get_the_post_thumbnail_url($post->ID, 'full'), // ← AJOUT ICI
+            'featured_image' => get_the_post_thumbnail_url($post->ID, 'full'),
         ];
 
         foreach ($fields as $field_key) {
@@ -26,20 +28,20 @@ function nei_cpt_exporter_handle_export() {
 
         $taxonomies = get_object_taxonomies($post->post_type);
 
-foreach ($taxonomies as $taxonomy) {
-    $terms = wp_get_post_terms($post->ID, $taxonomy, ['fields' => 'names']);
-    if (!is_wp_error($terms)) {
-        $entry['taxonomies'][$taxonomy] = $terms;
-    }
-}
+        foreach ($taxonomies as $taxonomy) {
+            $terms = wp_get_post_terms($post->ID, $taxonomy, ['fields' => 'names']);
+            if (!is_wp_error($terms)) {
+                $entry['taxonomies'][$taxonomy] = $terms;
+            }
+        }
 
 
         $output['posts'] = $entry;
     }
-        // Clean output buffer if anything was sent before
-        if (ob_get_length()) {
-            ob_clean();
-        }
+    // Clean output buffer if anything was sent before
+    if (ob_get_length()) {
+        ob_clean();
+    }
     $filename = 'nova_export_' . $cpt . '_' . date('Ymd_His') . '.json';
     header('Content-Description: File Transfer');
     header('Content-Disposition: attachment; filename=' . $filename);

@@ -2,7 +2,7 @@
 if (!defined('ABSPATH')) exit;
 add_action('admin_menu', function () {
     add_submenu_page(
-        'nei-main',
+        'nei-exporter',
         'Importer',
         'Importer',
         'manage_options',

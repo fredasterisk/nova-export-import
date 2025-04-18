@@ -6,14 +6,14 @@ add_action('admin_menu', function () {
         'Nova Exp/Imp',
         'Nova Exp/Imp',
         'manage_options',
-        'nei-main',
+        'nei-exporter',
         'nei_cpt_exporter_render_page',
         'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iY3VycmVudENvbG9yIj48cGF0aCBkPSJNMyAxOUgyMVYyMUgzVjE5Wk0xMyA1LjgyODQzVjE3SDExVjUuODI4NDNMNC45Mjg5MyAxMS44OTk1TDMuNTE0NzIgMTAuNDg1M0wxMiAyTDIwLjQ4NTMgMTAuNDg1M0wxOS4wNzExIDExLjg5OTVMMTMgNS44Mjg0M1oiPjwvcGF0aD48L3N2Zz4=',
         30
     );
 
     add_submenu_page(
-        'nei-main',
+        'nei-exporter',
         'Exporter',
         'Exporter',
         'manage_options',
@@ -36,6 +36,8 @@ function nei_cpt_exporter_render_page() {
     <div class="wrap">
         <h1>Exporter des publications</h1>
         <form method="post">
+        <input type="hidden" name="page" value="nei-exporter">
+
             <label for="cpt_select">Choisir un CPT :</label>
             <select id="cpt_select" name="cpt">
                 <?php foreach ($post_types as $slug => $pt): ?>

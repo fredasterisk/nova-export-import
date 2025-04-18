@@ -49,7 +49,7 @@ function nei_cpt_exporter_handle_export() {
     header('Expires: 0');
     header('Cache-Control: must-revalidate');
     header('Pragma: public');
-    echo json_encode($output, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
-    echo '<pre>' . json_encode($output, JSON_PRETTY_PRINT) . '</pre>';
-    exit;
+    //echo json_encode($output, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+    //echo '<pre>' . json_encode($output, JSON_PRETTY_PRINT) . '</pre>';
+    //exit;
 }

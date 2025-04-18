@@ -6,7 +6,7 @@ add_action('admin_menu', function () {
         'Importer',
         'Importer',
         'manage_options',
-        'nei-cpt-importer',
+        'nei-importer',
         'nei_cpt_importer_render_page'
     );
 });
@@ -14,16 +14,12 @@ add_action('admin_menu', function () {
 function nei_cpt_importer_render_page() {
     if (!current_user_can('manage_options')) return;
 
-    if (isset($_POST['nei_import_submit']) && isset($_FILES['import_file'])) {
-        nei_handle_import_upload();
-        return;
-    }
-
     $post_types = get_post_types(['public' => true], 'objects');
     ?>
     <div class="wrap">
         <h1>Importer des publications</h1>
-        <form method="post" enctype="multipart/form-data">
+        <form method="post" enctype="multipart/form-data" action="<?php echo esc_url( admin_url('admin-post.php') ); ?>?action=nei_import">
+        >
             <label for="import_file">Fichier JSON :</label><br>
             <input type="file" name="import_file" id="import_file" accept=".json" required><br><br>
 

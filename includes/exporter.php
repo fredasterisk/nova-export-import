@@ -6,7 +6,13 @@ function nei_cpt_exporter_handle_export() {
     $cpt = sanitize_text_field($_POST['cpt']);
     $fields = $_POST['acf_fields'] ?? [];
     $taxonomy_data = nei_export_taxonomies_and_terms($cpt);
-    $posts = get_posts(['post_type' => $cpt, 'numberposts' => -1]);
+    $query = new WP_Query([
+        'post_type'           => $cpt,
+        'posts_per_page'      => -1,
+        'post_status'         => 'any',     // or 'publish' if you only want published
+        'ignore_sticky_posts' => true,
+    ]);
+    $posts = $query->have_posts() ? $query->posts : [];
     $output = [
         'posts' => [],
         'defined_taxonomies' => $taxonomy_data,
@@ -36,8 +42,9 @@ function nei_cpt_exporter_handle_export() {
         }
 
 
-        $output['posts'] = $entry;
+        $output['posts'][] = $entry;
     }
+    wp_reset_postdata();
     // Clean output buffer if anything was sent before
     if (ob_get_length()) {
         ob_clean();
@@ -49,7 +56,6 @@ function nei_cpt_exporter_handle_export() {
     header('Expires: 0');
     header('Cache-Control: must-revalidate');
     header('Pragma: public');
-    //echo json_encode($output, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
-    //echo '<pre>' . json_encode($output, JSON_PRETTY_PRINT) . '</pre>';
-    //exit;
+    echo json_encode($output, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+    exit;
 }

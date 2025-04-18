@@ -26,18 +26,11 @@ add_action('admin_menu', function () {
 function nei_cpt_exporter_render_page() {
     if (!current_user_can('manage_options')) return;
 
-    if (isset($_POST['nei_export_cpt'])) {
-        nei_cpt_exporter_handle_export(); // définie dans includes/exporter.php
-        return;
-    }
-
     $post_types = get_post_types(['public' => true], 'objects');
     ?>
     <div class="wrap">
         <h1>Exporter des publications</h1>
         <form method="post">
-        <input type="hidden" name="page" value="nei-exporter">
-
             <label for="cpt_select">Choisir un CPT :</label>
             <select id="cpt_select" name="cpt">
                 <?php foreach ($post_types as $slug => $pt): ?>
@@ -54,8 +47,9 @@ function nei_cpt_exporter_render_page() {
             if ($sample) {
                 $fields = get_field_objects($sample[0]->ID);
                 if ($fields) {
-                    echo '<form method="post">';
+                    echo '<form method="post"  action="'.esc_url( admin_url('admin-post.php') ).'?action=nei_export">';
                     echo '<input type="hidden" name="cpt" value="' . esc_attr($cpt) . '">';
+                    echo '<input type="hidden" name="page" value="nei-exporter">';
                     foreach ($fields as $key => $field) {
                         echo '<label><input type="checkbox" checked name="acf_fields[]" value="' . esc_attr($key) . '">' . esc_html($field['label']) . '</label><br>';
                     }

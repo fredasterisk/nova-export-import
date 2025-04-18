@@ -36,10 +36,18 @@ foreach ($taxonomies as $taxonomy) {
 
         $output['posts'] = $entry;
     }
-    ob_clean();
+        // Clean output buffer if anything was sent before
+        if (ob_get_length()) {
+            ob_clean();
+        }
     $filename = 'nova_export_' . $cpt . '_' . date('Ymd_His') . '.json';
-    header('Content-disposition: attachment; filename=' . $filename);
-    header('Content-type: application/json');
+    header('Content-Description: File Transfer');
+    header('Content-Disposition: attachment; filename=' . $filename);
+    header('Content-Type: application/json');
+    header('Expires: 0');
+    header('Cache-Control: must-revalidate');
+    header('Pragma: public');
     echo json_encode($output, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+    echo '<pre>' . json_encode($output, JSON_PRETTY_PRINT) . '</pre>';
     exit;
 }

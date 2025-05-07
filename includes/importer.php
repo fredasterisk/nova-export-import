@@ -39,6 +39,8 @@ function nei_handle_import_upload() {
         $slug   = sanitize_title( $item['slug'] ?? '' );
         $title  = $item['title'] ?? '';
         $content= $item['content'] ?? '';
+        $modified_date = $item['modified_date'] ?? null;
+        $publish_date = $item['publish_date'] ?? null;
     
         // 1) On cherche un post existant au slug donné
         $existing = get_page_by_path( $slug, OBJECT, $cpt );
@@ -50,8 +52,10 @@ function nei_handle_import_upload() {
                 'post_title'   => $title,
                 'post_content' => $content,
                 'post_name'    => $slug,
-                'publish_date' => $post->post_date,
-                'modified_date' => $post->post_modified,
+                'post_modified' => $modified_date,
+                'post_modified_gmt' => $modified_date,
+                'post_date'    => $publish_date,
+                'post_date_gmt' => $publish_date,
             ], true );
         } else {
             // 2b) Sinon → on insère
@@ -61,8 +65,10 @@ function nei_handle_import_upload() {
                 'post_name'    => $slug,
                 'post_status'  => 'publish',
                 'post_type'    => $cpt,
-                'publish_date' => $post->post_date,
-                'modified_date' => $post->post_modified,
+                'post_modified' => $modified_date,
+                'post_modified_gmt' => $modified_date,
+                'post_date'    => $publish_date,
+                'post_date_gmt' => $publish_date,
             ], true );
         }
     

@@ -50,6 +50,8 @@ function nei_handle_import_upload() {
                 'post_title'   => $title,
                 'post_content' => $content,
                 'post_name'    => $slug,
+                'publish_date' => $post->post_date,
+                'modified_date' => $post->post_modified,
             ], true );
         } else {
             // 2b) Sinon → on insère
@@ -59,6 +61,8 @@ function nei_handle_import_upload() {
                 'post_name'    => $slug,
                 'post_status'  => 'publish',
                 'post_type'    => $cpt,
+                'publish_date' => $post->post_date,
+                'modified_date' => $post->post_modified,
             ], true );
         }
     
@@ -74,10 +78,33 @@ function nei_handle_import_upload() {
             }
         }
     
-        // 4) Taxonomies
+        // 4) Gérer les taxonomies et leurs termes
         if ( ! empty( $item['taxonomies'] ) && is_array( $item['taxonomies'] ) ) {
-            foreach ( $item['taxonomies'] as $tax => $terms ) {
-                wp_set_post_terms( $post_id, $terms, $tax );
+            foreach ( $item['taxonomies'] as $taxonomy => $terms ) {
+                if ( ! taxonomy_exists( $taxonomy ) ) {
+                    continue;
+                }
+
+                $term_ids = [];
+                foreach ( $terms as $term_name ) {
+                    // 1) Vérifier si le terme existe
+                    $term = term_exists( $term_name, $taxonomy );
+                    if ( $term === 0 || $term === null ) {
+                        // 2) Créer le terme s’il n’existe pas
+                        $new = wp_insert_term( $term_name, $taxonomy );
+                        if ( ! is_wp_error( $new ) && isset( $new['term_id'] ) ) {
+                            $term_ids[] = (int) $new['term_id'];
+                        }
+                    } else {
+                        // exists: term_exists peut retourner un array ou un ID
+                        $term_ids[] = is_array( $term ) ? (int) $term['term_id'] : (int) $term;
+                    }
+                }
+
+                // 3) Assigner tous les term_ids au post (remplace ceux existants)
+                if ( ! empty( $term_ids ) ) {
+                    wp_set_post_terms( $post_id, $term_ids, $taxonomy, false );
+                }
             }
         }
     

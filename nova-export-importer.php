@@ -2,7 +2,7 @@
 /*
 Plugin Name: Nova Export/Import
 Description: Exportateur de CPT avec champs ACF sélectionnables
-Version: 0.6
+Version: 0.7
 Author: Asterisk
 GitHub Plugin URI: https://github.com/fredasterisk/nova-export-import
 GitHub Branch: main

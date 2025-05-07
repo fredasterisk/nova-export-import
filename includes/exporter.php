@@ -23,6 +23,8 @@ function nei_cpt_exporter_handle_export() {
             'title' => $post->post_title,
             'content' => $post->post_content,
             'slug' => $post->post_name,
+            'publish_date' => $post->post_date,
+            'modified_date' => $post->post_modified,
             'taxonomies' => [],
             'meta' => [],
             'featured_image' => get_the_post_thumbnail_url($post->ID, 'full'),

@@ -43,6 +43,7 @@ function nei_handle_import_upload() {
         $modified_date_gmt = $item['post_modified_gmt'] ?? null;
         $post_date = $item['post_date'] ?? null;
         $post_date_gmt = $item['post_date_gmt'] ?? null;
+        $upload_media = true;
     
         // 1) On cherche un post existant au slug donné
         $existing = get_page_by_path( $slug, OBJECT, $cpt );
@@ -59,6 +60,7 @@ function nei_handle_import_upload() {
                 'post_date'    => $post_date,
                 'post_date_gmt' => $post_date_gmt,
             ], true );
+            $upload_media = false;
         } else {
             // 2b) Sinon → on insère
             $post_id = wp_insert_post([
@@ -117,9 +119,12 @@ function nei_handle_import_upload() {
         }
     
         // 5) Image à la une
-        if ( ! empty( $item['featured_image'] ) && filter_var( $item['featured_image'], FILTER_VALIDATE_URL ) ) {
-            nei_import_featured_image( $item['featured_image'], $post_id );
+        if($upload_media) {
+            if ( ! empty( $item['featured_image'] ) && filter_var( $item['featured_image'], FILTER_VALIDATE_URL ) ) {
+                nei_import_featured_image( $item['featured_image'], $post_id );
+            }
         }
+
     }
 
     echo '<div class="notice notice-success"><p>Importation terminée avec succès.</p></div>';
